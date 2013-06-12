@@ -1,0 +1,25 @@
+# Simple way of bootstrapping angular app for prototyping purposes
+snippet ngindex
+	<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/${1:1.0.1}/angular.js"></script>
+	</head>
+	<body ng-app>
+
+	${2}
+
+	</body>
+	</html>
+# Script tag importing base AngularJS file from CDN
+snippet ngsa
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/${1:1.0.1}/angular.js"></script>
+
+	${2}
+# A script tag holding Angular's template
+snippet ngst
+	<script type="text/ng-template" id="${1:id}">
+	${2}
+	</script>
+# A binding in AngularJS
+snippet ngb
+	{{${1:binding}}}${2}

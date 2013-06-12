@@ -8,33 +8,33 @@ endsnippet
 
 
 snippet ngfor "angular.foreach loop"
-angular.forEach(${1:iterateOver}, function(value, key){
+angular.forEach(${1:iterateOver}, function(value, key) {
   $0
 });
 endsnippet
 
 
 snippet ngm "A new angular module without a config function."
-angular.module('${1:moduleName}',[${2:moduleDependencies}]);
+angular.module('${1:moduleName}', [${2:moduleDependencies}]);
 $0
 endsnippet
 
 
-snippet ngma "A new angular module without a config function and a variable assigment."
-var ${1:moduleName} = angular.module('$1$',[${2:moduleDeps}]);
+snippet ngma "A new angular module without a config function and a variable assignment."
+var ${1:moduleName} = angular.module('$1$', [${2:moduleDeps}]);
 $0
 endsnippet
 
 
 snippet ngmc "A new angular module with a config function"
-var ${1:moduleName} = angular.module('$1',[${2:moduleDeps}], function(${3:configDeps}){
+var ${1:moduleName} = angular.module('$1', [${2:moduleDeps}], function(${3:configDeps}) {
   $0
 });
 endsnippet
 
 
 snippet ngmfa "A factory in a module"
-factory('${1:factoryName}', function(${2:dependencies}){
+factory('${1:factoryName}', function(${2:dependencies}) {
   $0
 });
 endsnippet
@@ -67,9 +67,22 @@ $0
 endsnippet
 
 
+
+snippet ngrwr "Defines a when condition of an AngularJS route with the resolve block."
+$routeProvider.when('${1:url}', {
+  templateUrl: '${2:templateUrl}', 
+  controller: '${3:controller}',
+  resolve: {
+    $4
+  }
+});
+$0
+endsnippet
+
+
 snippet ngro "Defines an otherwise condition of an AngularJS route."
-$routeProvider.otherwise(
-  redirectTo : '${1:url}'
+$routeProvider.otherwise({
+  redirectTo: '${1:url}'
 });
 $0
 endsnippet
@@ -84,19 +97,19 @@ endsnippet
 
 
 snippet $v "Defines a new $scope'd variable inside an AngularJS controller."
-$scope.${1:variable} = ${2:value}
+$scope.${1:variable} = ${2:value};
 $0
 endsnippet
 
 
-snippet $va "Defines a new $scope'd variable inside an AngularJS controller and assigns a value from a contstructor arguments."
+snippet $va "Defines a new $scope'd variable inside an AngularJS controller and assigns a value from a constructor arguments."
 $scope.${1:variable} = ${2:variable};
 $0
 endsnippet
 
 
-snippet $w "Define a $watch for an expression. You can change the expression  to be watched."
-$scope.$watch('${1:watchExpr}',function(newValue, oldValue){
+snippet $w "Define a $watch for an expression. You can change the expression to be watched."
+$scope.$watch('${1:watchExpr}',function(newValue, oldValue) {
   $0
 });
 endsnippet
