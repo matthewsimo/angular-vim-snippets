@@ -1,0 +1,29 @@
+
+
+snippet ngindex "Basic Angular Bootstrap (For Prototyping)"
+%html
+	%head
+		%script{:src => "https://ajax.googleapis.com/ajax/libs/angularjs/${1:1.0.1}/angular.js"}
+	%body{"ng-app" => true}
+		$0
+endsnippet
+
+
+snippet ngsa "Angular Source Script"
+%script{:src => "https://ajax.googleapis.com/ajax/libs/angularjs/${1:1.0.1}/angular.js"}
+$0
+endsnippet
+
+
+snippet ngst "A script tag holding Angular template"
+%script{:type => "text/ng-template", :id => "${1:id}"}
+	$0
+endsnippet
+
+
+snippet ngb "A binding in AngularJS"
+{{${1:binding}}}$0
+endsnippet
+
+
+# vim:ft=snippets:
