@@ -60,7 +60,7 @@ endsnippet
 # Route Based Snippets
 snippet ngrw "Defines a when condition of an AngularJS route."
 $routeProvider.when('${1:url}', {
-  templateUrl: '${2:templateUrl}', 
+  templateUrl: '${2:templateUrl}',
   controller: '${3:controller}'
 });
 $0
@@ -70,7 +70,7 @@ endsnippet
 
 snippet ngrwr "Defines a when condition of an AngularJS route with the resolve block."
 $routeProvider.when('${1:url}', {
-  templateUrl: '${2:templateUrl}', 
+  templateUrl: '${2:templateUrl}',
   controller: '${3:controller}',
   resolve: {
     $4
@@ -157,7 +157,7 @@ directive('${1:directiveName}', function factory(${2:injectables}) {
     ${3:directiveAttrs},
     compile: function compile(tElement, tAttrs, transclude) {
       return function (scope, element, attrs) {
-        
+        $0
       }
     }
   };
