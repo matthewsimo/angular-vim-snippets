@@ -12,7 +12,7 @@ This repository contains snippets files for [AngularJS](http://angularjs.org/) i
 
 ### UltiSnip
  - `git submodule add git@github.com:matthewsimo/angular-vim-snippets.git /path/you/want/it/`
- - add `./UltiSnip` it do your list of `g:UltiSnipsSnippetDirectories` and your should be set
+ - add `./UltiSnip` it do your list of `g:UltiSnipsSnippetDirectories` and you should be set
 
 ### Snipmate
 
