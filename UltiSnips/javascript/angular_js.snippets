@@ -1,11 +1,20 @@
-
-
 snippet ngc "Define a new Angular Controller. You can change the controller name and parameters."
-var ${1:controllerName} = function(${2:scope}, ${3:injectables}) {
-  $0
-};
-endsnippet
+angular.module('`!p
+f = open(fn, 'r').read()
 
+# Regex to find module name
+mod = re.compile('angular.module\((?:\'|,")(.*?)(?:\'|")')
+
+matches = mod.findall(f)
+
+if len(matches):
+	snip.rv = matches[0]
+else:
+	snip.rv = "moduleName"
+`').controller('${1:controllerName}', function(${2:$scope}){
+	${0:$scope.awesomeThings = ['vim', 'ultisnips', 'python'];}
+});
+endsnippet
 
 snippet ngfor "angular.foreach loop"
 angular.forEach(${1:iterateOver}, function(value, key) {
@@ -174,5 +183,30 @@ snippet ngdl "A directive with a linking function only."
 });
 endsnippet
 
+snippet hget "$http.get" !b
+$http.get('${1:/uri}'${3:, ${2:query}})
+	.success(function(${4:collection}) {
+		${5:$scope.$4 = $4;}
+	})
+	.error(function(err) {
+		${6:console.log(err);}
+	})
+endsnippet
+
+# snippet /meth "Method" !b
+# `!p
+# f = open(fn, 'r').read()
+
+# # Regex to find module name
+# mod = re.compile('angular.module\((?:\'|,")(.*?)(?:\'|")')
+
+# matches = mod.findall(f)
+
+# if len(matches):
+# 	snip.rv = matches[0]
+# else:
+# 	snip.rv = "moduleName"
+# `
+# endsnippet
 
 # vim:ft=snippets:
