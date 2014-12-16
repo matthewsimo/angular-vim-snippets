@@ -12,14 +12,18 @@ This repository contains snippets files for [AngularJS](http://angularjs.org/) i
 
 ### UltiSnip
  - `git submodule add git@github.com:matthewsimo/angular-vim-snippets.git /path/you/want/it/`
- - add `./UltiSnip` it do your list of `g:UltiSnipsSnippetDirectories` and you should be set
+ - add `./UltiSnip` to your list of `g:UltiSnipsSnippetDirectories` and you should be set
 
 ### Snipmate
 
  - `git submodule add git@github.com:matthewsimo/angular-vim-snippets.git /path/you/want/it/`
- - add `./snippets` it do your VIM *'runtimepath'* or *'rtp'*
+ - add `./snippets` to your VIM *'runtimepath'* or *'rtp'*
    - e.g. `rtp/snippets/<filetype>/*.snippets`
 
+### NeoSnippets
+
+ - `git submodule add git@github.com:matthewsimo/angular-vim-snippets.git /path/you/want/it/`
+ - add `./snippets` to `g:neosnippet#snippets_directory`
 
 ## Contributing
 
