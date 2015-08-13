@@ -237,7 +237,7 @@ snippet /s "NGDoc service" !b
 /**
  * @ngdoc service
  * @name ${1:`!p get_ng_module(snip)`}.service:${2:serviceName}
- * @description ${0: $2 is a service to do $2}
+ * @description ${0: \`$2\` is a service to do $2}
  */
 endsnippet
 
@@ -245,7 +245,7 @@ snippet /c "NGDoc service" !b
 /**
  * @ngdoc controller
  * @name ${1:`!p get_ng_module(snip)`}.controller:${2:controllerName}
- * @description ${0: $2 is a controller to do $2}
+ * @description ${0: \`$2\` is a controller to do $2}
  */
 endsnippet
 
@@ -254,7 +254,7 @@ snippet /m "NGDoc Method" !b
  * @ngdoc
  * @methodOf ${1:`!p get_ng_component_of(snip)`}
  * @name $1#${2:name}
- * @description ${0:$1 is a method to...}
+ * @description ${0:\`$2\` is a method to...}
  */
 endsnippet
 
@@ -263,7 +263,7 @@ snippet /p "NGDoc Property" !b
  * @ngdoc
  * @propertyOf ${1:`!p get_ng_component_of(snip)`}
  * @name $1#${2:name}
- * @description ${0:$1 is a property for ...}
+ * @description ${0:\`$2\` is a property for}
  */
 endsnippet
 
@@ -274,6 +274,14 @@ snippet /d "NGDoc directive" !b
  * @description ${0:Description}
  * @restrict ECA
  */
+endsnippet
+
+snippet */ex "Example comment" 
+* @example
+* <example>
+*   <file name="${1:index.html}">
+* 	</file>
+* </example>
 endsnippet
 
 # vim:ft=snippets:
