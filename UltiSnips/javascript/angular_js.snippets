@@ -1,20 +1,50 @@
-snippet ngc "Define a new Angular Controller. You can change the controller name and parameters."
-angular.module('`!p
-f = open(fn, 'r').read()
+global !p
+import uuid
+import re
 
-# Regex to find module name
-mod = re.compile('angular.module\((?:\'|,")(.*?)(?:\'|")')
+mod_re = re.compile('angular.module\(["\']*(.*?)["\'\),]')
+type_re = re.compile('\.(controller|directive|service|factory|provider|value)\(')
+component_re = re.compile('\.(?:controller|directive|service|factory|provider)\(["\'](.*?)["\']')
+DEFAULT_NAME = 'appName'
+DEFAULT_TYPE_NAME = 'type'
+DEFAULT_COMPONENT_NAME = 'componentName'
+READ_BYTES=400
 
-matches = mod.findall(f)
+def bufText():
+	return '\n'.join(vim.current.window.buffer[:2])
 
-if len(matches):
-	snip.rv = matches[0]
-else:
-	snip.rv = "moduleName"
-`').controller('${1:controllerName}', function(${2:$scope}){
-	${0:$scope.awesomeThings = ['vim', 'ultisnips', 'python'];}
-});
-endsnippet
+def get_ng_component_of(snip):
+    text = bufText()
+    get_ng_module(snip, text=text)
+    snip.rv += '.'
+    get_ng_type(snip, text=text)
+    snip.rv += ':'
+    get_ng_component(snip, text=text)
+
+def get_ng_type(snip, **kwargs):
+    text = kwargs.get('text', bufText())
+    res = type_re.findall(text)
+    if len(res) > 0:
+        snip.rv += res[0]
+    else:
+        snip.rv += DEFAULT_TYPE_NAME
+
+def get_ng_component(snip, **kwargs):
+    text = kwargs.get('text', bufText())
+    res = component_re.findall(text)
+    if len(res) > 0:
+        snip.rv += res[0]
+    else:
+        snip.rv += DEFAULT_COMPONENT_NAME
+
+def get_ng_module(snip, **kwargs):
+    text = kwargs.get('text', bufText())
+    res = mod_re.findall(text)
+    if len(res) > 0:
+        snip.rv += res[0]
+    else:
+        snip.rv += DEFAULT_NAME
+endglobal
 
 snippet ngfor "angular.foreach loop"
 angular.forEach(${1:iterateOver}, function(value, key) {
@@ -193,20 +223,49 @@ $http.get('${1:/uri}'${3:, ${2:query}})
 	})
 endsnippet
 
-# snippet /meth "Method" !b
-# `!p
-# f = open(fn, 'r').read()
+snippet $iget "Injector Get" !b
+${1:variable} = $injector.get('${2:$1}');
+endsnippet
 
-# # Regex to find module name
-# mod = re.compile('angular.module\((?:\'|,")(.*?)(?:\'|")')
+snippet /s "NGDoc service" !b
+/**
+ * @ngdoc service
+ * @name ${1:`!p get_ng_module(snip)`}.service:${2:serviceName}
+ * @description ${0: $2 is a service to do $2}
+ */
+endsnippet
 
-# matches = mod.findall(f)
+snippet /c "NGDoc service" !b
+/**
+ * @ngdoc controller
+ * @name ${1:`!p get_ng_module(snip)`}.controller:${2:controllerName}
+ * @description ${0: $2 is a controller to do $2}
+ */
+endsnippet
 
-# if len(matches):
-# 	snip.rv = matches[0]
-# else:
-# 	snip.rv = "moduleName"
-# `
-# endsnippet
+snippet /m "NGDoc Method" !b
+/**
+ * @ngdoc
+ * @methodOf ${1:`!p get_ng_component_of(snip)`}
+ * @name $1#${2:name}
+ * @description ${0:$1 is a method to...}
+ */
+endsnippet
 
-# vim:ft=snippets:
+snippet /p "NGDoc Property" !b
+/**
+ * @ngdoc
+ * @propertyOf ${1:`!p get_ng_component_of(snip)`}
+ * @name $1#${2:name}
+ * @description ${0:$1 is a property for ...}
+ */
+endsnippet
+
+snippet /d "NGDoc directive" !b
+/**
+ * @ngdoc directive
+ * @name $1#${2:name}
+ * @description ${0:Description}
+ * @restrict ECA
+ */
+endsnippet
