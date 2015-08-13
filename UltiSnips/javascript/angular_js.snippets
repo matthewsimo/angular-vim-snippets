@@ -8,10 +8,10 @@ component_re = re.compile('\.(?:controller|directive|service|factory|provider)\(
 DEFAULT_NAME = 'appName'
 DEFAULT_TYPE_NAME = 'type'
 DEFAULT_COMPONENT_NAME = 'componentName'
-READ_BYTES=400
+CHECK_LINES=20
 
 def bufText():
-	return '\n'.join(vim.current.window.buffer[:2])
+	return '\n'.join(vim.current.window.buffer[:CHECK_LINES])
 
 def get_ng_component_of(snip):
     text = bufText()
@@ -45,6 +45,12 @@ def get_ng_module(snip, **kwargs):
     else:
         snip.rv += DEFAULT_NAME
 endglobal
+
+snippet ngc "Define a new Angular Controller. You can change the controller name and parameters."
+var ${1:controllerName} = function(${2:\$scope}, ${3:injectables}) {
+  $0
+};
+endsnippet
 
 snippet ngfor "angular.foreach loop"
 angular.forEach(${1:iterateOver}, function(value, key) {
