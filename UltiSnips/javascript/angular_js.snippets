@@ -236,16 +236,16 @@ endsnippet
 snippet /s "NGDoc service" !b
 /**
  * @ngdoc service
- * @name ${1:`!p get_ng_module(snip)`}.service:${2:serviceName}
- * @description ${0: \`$2\` is a service to do $2}
+ * @name ${1:`!p get_ng_module(snip)`}.service:${2:`!p get_ng_component(snip)`}
+ * @description \`$2\` is a service ${0:to do $2}
  */
 endsnippet
 
 snippet /c "NGDoc service" !b
 /**
  * @ngdoc controller
- * @name ${1:`!p get_ng_module(snip)`}.controller:${2:controllerName}
- * @description ${0: \`$2\` is a controller to do $2}
+ * @name ${1:`!p get_ng_module(snip)`}.controller:${2:`!p get_ng_component(snip)`}
+ * @description \`$2\` is a controller ${0:to do $2}
  */
 endsnippet
 
@@ -270,7 +270,8 @@ endsnippet
 snippet /d "NGDoc directive" !b
 /**
  * @ngdoc directive
- * @name $1#${2:name}
+ * @name ${1:`!p get_ng_module(snip)`.directive:`!p get_ng_component(snip)`}
+ * @param {${2: Type}} ${3: name} ${4: description}
  * @description ${0:Description}
  * @restrict ECA
  */
