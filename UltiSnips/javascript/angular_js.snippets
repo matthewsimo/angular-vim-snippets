@@ -8,10 +8,9 @@ component_re = re.compile('\.(?:controller|directive|service|factory|provider)\(
 DEFAULT_NAME = 'appName'
 DEFAULT_TYPE_NAME = 'type'
 DEFAULT_COMPONENT_NAME = 'componentName'
-CHECK_LINES=20
 
 def bufText():
-	return '\n'.join(vim.current.window.buffer[:CHECK_LINES])
+	return '\n'.join(vim.current.window.buffer[:vim.current.window.cursor[0]+1])
 
 def get_ng_component_of(snip):
     text = bufText()
@@ -25,7 +24,7 @@ def get_ng_type(snip, **kwargs):
     text = kwargs.get('text', bufText())
     res = type_re.findall(text)
     if len(res) > 0:
-        snip.rv += res[0]
+        snip.rv += res[len(res)-1]
     else:
         snip.rv += DEFAULT_TYPE_NAME
 
@@ -33,7 +32,7 @@ def get_ng_component(snip, **kwargs):
     text = kwargs.get('text', bufText())
     res = component_re.findall(text)
     if len(res) > 0:
-        snip.rv += res[0]
+        snip.rv += res[len(res)-1]
     else:
         snip.rv += DEFAULT_COMPONENT_NAME
 
@@ -41,7 +40,7 @@ def get_ng_module(snip, **kwargs):
     text = kwargs.get('text', bufText())
     res = mod_re.findall(text)
     if len(res) > 0:
-        snip.rv += res[0]
+        snip.rv += res[len(res)-1]
     else:
         snip.rv += DEFAULT_NAME
 endglobal
