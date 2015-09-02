@@ -1,6 +1,7 @@
 global !p
 import uuid
 import re
+import textwrap
 
 mod_re = re.compile('angular.module\(["\']*(.*?)["\'\),]')
 type_re = re.compile('\.(controller|directive|service|factory|provider|value)\(')
@@ -43,6 +44,37 @@ def get_ng_module(snip, **kwargs):
         snip.rv += res[len(res)-1]
     else:
         snip.rv += DEFAULT_NAME
+
+def injector_phrase(v):
+    return '%s = $injector.get(\'%s\')' % (v, v)
+
+def trim_list(p):
+    while p[-1] in (',', ';'): p = p[:-1]
+    return '\n'.join(v for v in p.split('\n')
+                     if len(v.strip()) > 0
+										 and v.strip() not in (',', ';')
+                     and v[:2] != '//')
+
+
+def set_injectors(var_list, pre=''):
+    var_list = trim_list(var_list)
+    if len(var_list) == 0: return ''
+
+    phrase = textwrap.dedent(
+        '''
+        beforeEach(inject(function($injector) {
+            %s
+        }));
+        ''')
+
+    injectors = '\n\t'.join(injector_phrase(v) for v in var_list.split(', '))
+
+    phrase = phrase % (injectors,)
+
+    if len(pre) > 0:
+        return ('\n' + pre).join(phrase.split('\n'))
+
+    return phrase
 endglobal
 
 snippet ngc "Define a new Angular Controller. You can change the controller name and parameters."
@@ -276,12 +308,54 @@ snippet /d "NGDoc directive" !b
  */
 endsnippet
 
-snippet */ex "Example comment" 
+snippet */ex "Example comment"
 * @example
 * <example>
 *   <file name="${1:index.html}">
 * 	</file>
 * </example>
+endsnippet
+
+snippet r$q "return $q(function ..." !b
+return \$q(function(resolve, reject) {
+	${1://asynchronously resolve()}
+});$0
+endsnippet
+
+# TESTING snippets
+
+snippet inj "angular inject() function" !b
+inject(function(${1:thingsToInject}) {
+	${0://Do something with $1}
+});
+endsnippet
+
+snippet $ig "$injector.get" !b
+${1:something} = \$injector.get('${2:$1}');
+endsnippet
+
+snippet mod "" !b
+beforeEach(module(function(${1:\$provide}) {
+	${0:\$provide.service('TestThing', function(/*injected*/) {
+		this.foo = 'bar';
+	\});}
+}));
+endsnippet
+
+snippet injg "Set a local variable via injection" !b
+var ${1:injectable}; inject(function(_$1_) { $1 = _$1_; });
+endsnippet
+
+snippet test "karma angular test scaffold" !b
+describe('${1:something to be tested}', function() {
+	//Setup
+	beforeEach(module('${2:someModule}'));
+
+	var ${3://Injectables}`!p snip += set_injectors(t[3], '\t')`
+
+	//Tests
+	$0
+});
 endsnippet
 
 # vim:ft=snippets:
