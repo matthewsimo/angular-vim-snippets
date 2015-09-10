@@ -14,6 +14,16 @@ This repository contains snippets files for [AngularJS](http://angularjs.org/) i
  - `git submodule add git@github.com:matthewsimo/angular-vim-snippets.git /path/you/want/it/`
  - add `./UltiSnip` to your list of `g:UltiSnipsSnippetDirectories` and you should be set
 
+#### UltiSnip options
+
+For ngdoc snippets in ultisnips, the module name can be overwritten in case
+you're using a variable or js expression for your module name. Add this to your
+modeline or set as needed.
+```vim
+let g:angular_module_name='FooBar' "Replace with your module name, of course.
+```
+
+
 ### Snipmate
 
  - `git submodule add git@github.com:matthewsimo/angular-vim-snippets.git /path/you/want/it/`
