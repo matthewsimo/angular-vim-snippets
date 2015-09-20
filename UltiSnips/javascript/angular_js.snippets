@@ -1,6 +1,7 @@
 global !p
 import uuid
 import re
+import textwrap
 
 mod_re = re.compile('angular.module\(["\']*(.*?)["\'\),]')
 type_re = re.compile('\.(controller|directive|service|factory|provider|value)\(')
@@ -8,42 +9,71 @@ component_re = re.compile('\.(?:controller|directive|service|factory|provider)\(
 DEFAULT_NAME = 'appName'
 DEFAULT_TYPE_NAME = 'type'
 DEFAULT_COMPONENT_NAME = 'componentName'
-CHECK_LINES=20
 
 def bufText():
-	return '\n'.join(vim.current.window.buffer[:CHECK_LINES])
+	return '\n'.join(vim.current.window.buffer[:vim.current.window.cursor[0]+1])
 
-def get_ng_component_of(snip):
+def get_ng_component_of():
     text = bufText()
-    get_ng_module(snip, text=text)
-    snip.rv += '.'
-    get_ng_type(snip, text=text)
-    snip.rv += ':'
-    get_ng_component(snip, text=text)
+    return "%s.%s:%s" % (get_ng_module(text),
+                         get_ng_type(text),
+                         get_ng_component(text))
 
-def get_ng_type(snip, **kwargs):
-    text = kwargs.get('text', bufText())
+def get_ng_type(text=bufText()):
     res = type_re.findall(text)
     if len(res) > 0:
-        snip.rv += res[0]
+        return res[len(res)-1]
     else:
-        snip.rv += DEFAULT_TYPE_NAME
+        return DEFAULT_TYPE_NAME
 
-def get_ng_component(snip, **kwargs):
-    text = kwargs.get('text', bufText())
+def get_ng_component(text=bufText()):
     res = component_re.findall(text)
     if len(res) > 0:
-        snip.rv += res[0]
+        return res[len(res)-1]
     else:
-        snip.rv += DEFAULT_COMPONENT_NAME
+        return DEFAULT_COMPONENT_NAME
 
-def get_ng_module(snip, **kwargs):
-    text = kwargs.get('text', bufText())
+def get_ng_module(text=bufText()):
+    explicit_name = vim.vars.get('ngdoc_module_name', None)
+    if explicit_name:
+        return explicit_name.decode('utf-8')
+
     res = mod_re.findall(text)
     if len(res) > 0:
-        snip.rv += res[0]
+        return res[len(res)-1]
     else:
-        snip.rv += DEFAULT_NAME
+        return DEFAULT_NAME
+
+def injector_phrase(v):
+    return '%s = $injector.get(\'%s\')' % (v, v)
+
+def trim_list(p):
+    while p[-1] in (',', ';'): p = p[:-1]
+    return '\n'.join(v for v in p.split('\n')
+                     if len(v.strip()) > 0
+                     and v.strip() not in (',', ';')
+                     and v[:2] != '//')
+
+
+def set_injectors(var_list, pre=''):
+    var_list = trim_list(var_list)
+    if len(var_list) == 0: return ''
+
+    phrase = textwrap.dedent(
+        '''
+        beforeEach(inject(function($injector) {
+          %s
+        }));
+        ''')
+
+    injectors = ';\n\t'.join(injector_phrase(v) for v in var_list.split(', '))
+
+    phrase = phrase % (injectors,)
+
+    if len(pre) > 0:
+        return ('\n' + pre).join(phrase.split('\n'))
+
+    return phrase
 endglobal
 
 snippet ngc "Define a new Angular Controller. You can change the controller name and parameters."
@@ -236,15 +266,15 @@ endsnippet
 snippet /s "NGDoc service" !b
 /**
  * @ngdoc service
- * @name ${1:`!p get_ng_module(snip)`}.service:${2:`!p get_ng_component(snip)`}
+ * @name ${1:`!p snip.rv += get_ng_module()`}.service:${2:`!p snip.rv += get_ng_component()`}
  * @description \`$2\` is a service ${0:to do $2}
  */
 endsnippet
 
-snippet /c "NGDoc service" !b
+snippet /c "NGDoc controller" !b
 /**
  * @ngdoc controller
- * @name ${1:`!p get_ng_module(snip)`}.controller:${2:`!p get_ng_component(snip)`}
+ * @name ${1:`!p snip.rv += get_ng_module()`}.controller:${2:`!p snip.rv += get_ng_component()`}
  * @description \`$2\` is a controller ${0:to do $2}
  */
 endsnippet
@@ -252,7 +282,7 @@ endsnippet
 snippet /m "NGDoc Method" !b
 /**
  * @ngdoc
- * @methodOf ${1:`!p get_ng_component_of(snip)`}
+ * @methodOf ${1:`!p snip.rv += get_ng_component_of()`}
  * @name $1#${2:name}
  * @description ${0:\`$2\` is a method to}
  */
@@ -261,7 +291,7 @@ endsnippet
 snippet /p "NGDoc Property" !b
 /**
  * @ngdoc
- * @propertyOf ${1:`!p get_ng_component_of(snip)`}
+ * @propertyOf ${1:`!p snip.rv += get_ng_component_of()`}
  * @name $1#${2:name}
  * @description ${0:\`$2\` is a property for}
  */
@@ -270,19 +300,61 @@ endsnippet
 snippet /d "NGDoc directive" !b
 /**
  * @ngdoc directive
- * @name ${1:`!p get_ng_module(snip)`.directive:`!p get_ng_component(snip)`}
+ * @name ${1:`!p snip.rv += get_ng_module()`.directive:`!p snip.rv += get_ng_component()`}
  * @param {${2: Type}} ${3: name} ${4: description}
  * @description ${0:Description}
  * @restrict ECA
  */
 endsnippet
 
-snippet */ex "Example comment" 
+snippet */ex "Example comment"
 * @example
 * <example>
 *   <file name="${1:index.html}">
 * 	</file>
 * </example>
+endsnippet
+
+snippet r$q "return $q(function ..." !b
+return \$q(function(resolve, reject) {
+	${1://asynchronously resolve()}
+});$0
+endsnippet
+
+# TESTING snippets
+
+snippet inj "angular inject() function" !b
+inject(function(${1:thingsToInject}) {
+	${0://Do something with $1}
+});
+endsnippet
+
+snippet $ig "$injector.get" !b
+${1:something} = \$injector.get('${2:$1}');
+endsnippet
+
+snippet mod "" !b
+beforeEach(module(function(${1:\$provide}) {
+	${0:\$provide.service('TestThing', function(/*injected*/) {
+		this.foo = 'bar';
+	\});}
+}));
+endsnippet
+
+snippet injg "Set a local variable via injection" !b
+var ${1:injectable}; inject(function(_$1_) { $1 = _$1_; });
+endsnippet
+
+snippet test "karma angular test scaffold" !b
+describe('${1:something to be tested}', function() {
+	//Setup
+	beforeEach(module('${2:someModule}'));
+
+	var ${3://Injectables}`!p snip += set_injectors(t[3], '\t')`
+
+	//Tests
+	$0
+});
 endsnippet
 
 # vim:ft=snippets:
