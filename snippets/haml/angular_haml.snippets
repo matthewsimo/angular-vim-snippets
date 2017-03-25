@@ -2,23 +2,23 @@
 snippet ngindex
 	%html
 		%head
-			%script{:src => "https://ajax.googleapis.com/ajax/libs/angularjs/${1:1.2.12}/angular.js"}
+			%script{:src => "https://ajax.googleapis.com/ajax/libs/angularjs/${1:1.6.3}/angular.js"}
 		%body{"ng-app" => true}
-			${2}
+			${0}
 # Script tag importing base AngularJS file from CDN
 snippet ngsa
-	%script{:src => "https://ajax.googleapis.com/ajax/libs/angularjs/${1:1.2.12}/angular.js"}
-	${2}
+	%script{:src => "https://ajax.googleapis.com/ajax/libs/angularjs/${1:1.6.3}/angular.js"}
+	${0}
 # A script tag holding Angular's template
 snippet ngst
 	%script{:type => "text/ng-template", :id => "${1:id}"}
-		${2}
+		${0}
 # A binding in AngularJS
 snippet ngb
-	{{${1:binding}}}${2}
+	{{${1:binding}}}
 # Bind a view to a model
 snippet ngm
 	ng-model="${1:model}"
 # Disable a form element
-snippet ngd 
+snippet ngd
 	ng-disabled="${1:model}"
